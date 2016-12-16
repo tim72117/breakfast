@@ -25,27 +25,35 @@ app.config(function ($compileProvider, $mdIconProvider, $mdThemingProvider) {
     $mdIconProvider.defaultIconSet('/js/angular_material/core-icons.svg', 24);
 })
 
-.controller('ordersController', function($scope, $http, $timeout) {
+.controller('ordersController', function($scope, $http, $filter, $timeout) {
 
-    function getOrders() {
-        $http({method: 'GET', url: 'orders', data: {}})
+    $scope.items = [{}];
+
+    $http({method: 'GET', url: 'products', data: {}})
+    .success(function(data) {
+        console.log(data);
+        $scope.products = data.products;
+    }).error(function(e) {
+        console.log(e);
+    });
+
+    $scope.addProduct = function(item) {
+        item.finish = true;
+        $scope.items.push({});
+        console.log($scope.items);
+    };
+
+    $scope.order = function() {
+
+        console.log($filter);
+        return ;
+        $http({method: 'POST', url: 'order', data: {product_id: $scope.product.id}})
         .success(function(data) {
             console.log(data);
-            $scope.orders = data.orders;
-            $timeout(getOrders, 1000);
+            //$scope.products = data.products;
+            //document.write(data);
         }).error(function(e) {
-            console.log(e);
-        });
-    }
-
-    getOrders();
-
-    $scope.checkout = function(order) {
-        $http({method: 'POST', url: 'checkout', data: {order_id: order.id}})
-        .success(function(data) {
-            console.log(data);
-            $scope.orders = data.orders;
-        }).error(function(e) {
+            document.write(e);
             console.log(e);
         });
     };
@@ -56,27 +64,11 @@ app.config(function ($compileProvider, $mdIconProvider, $mdThemingProvider) {
 <body ng-controller="ordersController" layout="column">
     <md-content flex>
 
-<md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" ng-repeat="order in orders | orderBy:'wait'" layout="row">
-<md-card-content flex>
+        <md-select ng-model="item.product" ng-repeat="item in items" ng-change="addProduct(item)">
+            <md-option ng-repeat="product in products" ng-value="product">{{product.title}}</md-option>
+        </md-select>
 
-      <md-list flex>
-        <md-list-item ng-repeat="product in order.products">
-          <div class="md-list-item-text" layout="column">
-            <h3>{{ product.title }} X {{ product.pivot.amount }}</h3>
-          </div>
-        </md-list-item>
-    </md-list>
-
-
-</md-card-content>
-
-<h3 flex="10" style="justify-content: center;flex-direction: column;display: flex;text-align: center">{{ order.no }}</h3>
-<h3 flex="10" style="justify-content: center;flex-direction: column;display: flex;text-align: center">{{ order.wait }} min</h3>
-
-<md-card-actions flex="30" layout="row" layout-align="end center">
-<md-button flex="100" style="height:100%;font-size:40px" ng-click="checkout(order)">$ {{order.total}}</md-button>
-</md-card-actions>
-</md-card>
+        <md-button class="md-primary" ng-click="order()">確定</md-button>
 
     </md-content>
 </body>
