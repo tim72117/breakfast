@@ -13,12 +13,13 @@
 <script src="/js/angular/1.5.8/angular-aria.min.js"></script>
 <script src="/js/angular/1.5.8/angular-messages.min.js"></script>
 <script src="/js/angular_material/1.1.1/angular-material.min.js"></script>
+<script src="/js/dist/orders.js"></script>
 
 <!--<link rel="stylesheet" href="/css/Semantic-UI/2.2.4/semantic.min.css" />-->
 <link rel="stylesheet" href="/js/angular_material/1.1.1/angular-material.min.css">
 
 <script>
-var app = angular.module('app', ['ngSanitize', 'ngCookies', 'ngMaterial']);
+var app = angular.module('app', ['ngSanitize', 'ngCookies', 'ngMaterial', 'breakfast']);
 
 app.config(function ($compileProvider, $mdIconProvider, $mdThemingProvider) {
     $compileProvider.debugInfoEnabled(true);
@@ -27,57 +28,27 @@ app.config(function ($compileProvider, $mdIconProvider, $mdThemingProvider) {
 
 .controller('ordersController', function($scope, $http, $timeout) {
 
-    function getOrders() {
-        $http({method: 'GET', url: 'orders', data: {}})
-        .success(function(data) {
-            console.log(data);
-            $scope.orders = data.orders;
-            $timeout(getOrders, 3000);
-        }).error(function(e) {
-            document.write(e);
-            console.log(e);
-        });
-    }
 
-    getOrders();
-
-    $scope.checkout = function(order) {
-        $http({method: 'POST', url: 'checkout', data: {order_id: order.id}})
-        .success(function(data) {
-            console.log(data);
-            $scope.orders = data.orders;
-        }).error(function(e) {
-            console.log(e);
-        });
-    };
 
 });
 </script>
+<style>
+md-grid-tile-footer figcaption {
+    width: 100%;
+}
+md-grid-tile-footer figcaption h1 {
+    text-align: center;
+}
+</style>
 </head>
 <body ng-controller="ordersController" layout="column">
     <md-content flex>
-        <md-tabs md-dynamic-height md-border-bottom>
+        <md-tabs md-dynamic-height md-border-bottom md-selected="area">
             <md-tab label="訂單">
-                <md-card md-theme="{{ showDarkTheme ? 'dark-grey' : 'default' }}" ng-repeat="order in orders | orderBy:'wait'" layout="row">
-                    <md-card-content flex layout="row">
-                        <h3 flex="15" style="justify-content: center;flex-direction: column;display: flex;text-align: center">{{ order.no }}</h3>
-                        <md-list flex>
-                            <md-list-item ng-repeat="product in order.products">
-                                <div class="md-list-item-text" layout="column">
-                                    <h3>{{ product.title }} X {{ product.pivot.amount }}</h3>
-                                </div>
-                            </md-list-item>
-                        </md-list>
-                        <h3 flex="10" style="justify-content: center;flex-direction: column;display: flex;text-align: center">{{ order.wait }} min</h3>
-                    </md-card-content>
-                    <md-card-actions flex="30" layout="row" layout-align="end center">
-                        <md-button flex="100" style="height:100%;font-size:40px" ng-click="checkout(order)">$ {{order.total}}</md-button>
-                    </md-card-actions>
-                </md-card>
+                <orders ng-if="area==0"></orders>
             </md-tab>
             <md-tab label="調理區">
-                <md-content>
-                </md-content>
+                <materials ng-if="area==1"></materials>
             </md-tab>
         </md-tabs>
     </md-content>

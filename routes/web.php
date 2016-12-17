@@ -21,9 +21,23 @@ Route::get('buy', function () {
 
 Route::get('orders', function () {
 
-    $orders =  App\Order::with('products')->get();
+    $orders = App\Order::with('products')->get();
 
     return ['orders' => $orders];
+});
+
+Route::get('materials', function () {
+
+    $materials = App\Order::with('products.materials')->get()->reduce(function ($carry, $order) {
+        $order->products->each(function ($product) use ($carry) {
+            foreach ($product->materials as $material) {
+                $carry[$material->id]->amount += $product->pivot->amount;
+            }
+        });
+        return $carry;
+    }, App\Material::all()->keyBy('id'))->values();
+
+    return ['materials' => $materials];
 });
 
 Route::get('products', function () {
