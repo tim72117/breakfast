@@ -74,7 +74,7 @@ angular.module('breakfast', [])
             <md-content>
                 <md-grid-list md-cols-xs="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="6" md-row-height="2:2" md-gutter="12px" md-gutter-gt-sm="8px">
                     <md-grid-tile ng-repeat="material in materials | filter: {amount: '!!'}" md-colors="{backgroundColor: 'grey'}" md-rowspan="1" md-colspan="1">
-                        <img ng-src="{{images[material.id]}}" class="md-card-image" alt="Washed Out"><h1> X {{material.amount || 0}}</h1>
+                        <img ng-src="{{images[material.id]}}" class="md-card-image" alt="material">
                         <md-grid-tile-footer><h1>{{material.title}} X {{material.amount || 0}}</h1></md-grid-tile-footer>
                     </md-grid-tile>
                 </md-grid-list>
@@ -93,7 +93,7 @@ angular.module('breakfast', [])
                 .success(function(data) {
                     console.log(data);
                     $scope.materials = data.materials;
-                    //promise = $timeout(getMaterials, 3000);
+                    promise = $timeout(getMaterials, 3000);
                 }).error(function(e) {
                     document.write(e);
                     console.log(e);
