@@ -44,11 +44,22 @@ Route::post('checkout', function (Illuminate\Http\Request $request) {
 
 Route::post('order', function (Illuminate\Http\Request $request) {
 
-    $total = App\Product::find([$request->input('product_id')])->sum('price');
+    $products = array_reduce($request->input('items'), function ($carry, $item) {
+        $carry[$item['id']] = ['amount' => $item['amount']];
+        return $carry;
+    }, []);
 
-    $order = App\Order::create(['no' => 5, 'wait' => 10, 'total' => $total]);
+    $total = App\Product::find(array_keys($products))->reduce(function ($carry, $product) use ($products) {
+        $carry += $products[$product->id]['amount'] * $product->price;
+        return $carry;
+    }, 0);
 
-    $order->products()->attach($request->input('product_id'), ['amount' => 1]);
+    $no = App\Order::withTrashed()->max('no') ?: 0;
+    $taked_at = Carbon\Carbon::now()->addMinutes(10)->toDateTimeString();
 
-    return ['order' => 1];
+    $ordered = App\Order::create(['no' => $no+1, 'total' => $total, 'taked_at' => $taked_at]);
+
+    $ordered->products()->attach($products);
+
+    return ['ordered' => $ordered];
 });

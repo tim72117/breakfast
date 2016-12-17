@@ -27,7 +27,8 @@ app.config(function ($compileProvider, $mdIconProvider, $mdThemingProvider) {
 
 .controller('ordersController', function($scope, $http, $filter, $timeout) {
 
-    $scope.items = [{}];
+    $scope.cart = {items: []};
+    $scope.amount = 1;
 
     $http({method: 'GET', url: 'products', data: {}})
     .success(function(data) {
@@ -37,20 +38,23 @@ app.config(function ($compileProvider, $mdIconProvider, $mdThemingProvider) {
         console.log(e);
     });
 
-    $scope.addProduct = function(item) {
-        item.finish = true;
-        $scope.items.push({});
-        console.log($scope.items);
+    $scope.addProduct = function() {
+        var index = $scope.cart.items.indexOf($scope.product);
+        if (index > -1) {
+            $scope.cart.items[index].amount +=  $scope.amount
+        } else {
+            $scope.product.amount = $scope.amount;
+            $scope.cart.items.push($scope.product);
+        }
+
     };
 
     $scope.order = function() {
 
-        console.log($filter);
-        return ;
-        $http({method: 'POST', url: 'order', data: {product_id: $scope.product.id}})
+        $http({method: 'POST', url: 'order', data: {items: $scope.cart.items}})
         .success(function(data) {
             console.log(data);
-            //$scope.products = data.products;
+            $scope.ordered = data.ordered;
             //document.write(data);
         }).error(function(e) {
             document.write(e);
@@ -64,9 +68,29 @@ app.config(function ($compileProvider, $mdIconProvider, $mdThemingProvider) {
 <body ng-controller="ordersController" layout="column">
     <md-content flex>
 
-        <md-select ng-model="item.product" ng-repeat="item in items" ng-change="addProduct(item)">
-            <md-option ng-repeat="product in products" ng-value="product">{{product.title}}</md-option>
-        </md-select>
+        <div layout="row">
+            <md-input-container flex="80">
+                <label>商品</label>
+                <md-select ng-model="product" ng-change="amount = 1">
+                    <md-option ng-repeat="product in products" ng-value="product">{{product.title}} $ {{product.price}}</md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container flex="20">
+                <label>數量</label>
+                <input ng-model="amount" type="number">
+            </md-input-container>
+        </div>
+
+        <md-button class="md-primary" ng-click="addProduct()">新增</md-button>
+
+        <div ng-repeat="item in cart.items">
+            {{item.title}} X {{item.amount}}
+        </div>
+
+        <div ng-if="ordered">
+            <div>訂單號碼 {{ordered.no}}</div>
+            <div>取餐時間 {{ordered.taked_at}}</div>
+        </div>
 
         <md-button class="md-primary" ng-click="order()">確定</md-button>
 
