@@ -77,3 +77,7 @@ Route::post('order', function (Illuminate\Http\Request $request) {
 
     return ['ordered' => $ordered];
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');
