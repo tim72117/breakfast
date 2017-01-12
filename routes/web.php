@@ -19,41 +19,17 @@ Route::get('buy', function () {
     return View::make('buy');
 });
 
-Route::get('orders', function () {
+Route::get('orders', 'OrderController@all');
+Route::get('materials', 'OrderController@materials');
+Route::get('products', 'OrderController@products');
+Route::post('checkout', 'OrderController@checkout');
 
-    $orders = App\Order::with('products')->get();
-
-    return ['orders' => $orders];
-});
-
-Route::get('materials', function () {
-
-    $materials = App\Order::with('products.materials')->get()->reduce(function ($carry, $order) {
-        $order->products->each(function ($product) use ($carry) {
-            foreach ($product->materials as $material) {
-                $carry[$material->id]->amount += $product->pivot->amount;
-            }
-        });
-        return $carry;
-    }, App\Material::all()->keyBy('id'))->values();
-
-    return ['materials' => $materials];
-});
 
 Route::get('products', function () {
 
     $products =  App\Product::all();
 
     return ['products' => $products];
-});
-
-Route::post('checkout', function (Illuminate\Http\Request $request) {
-
-    App\Order::find($request->input('order_id'))->delete();
-
-    $orders =  App\Order::with('products')->get();
-
-    return ['orders' => $orders];
 });
 
 Route::post('order', function (Illuminate\Http\Request $request) {
