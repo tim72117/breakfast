@@ -11,14 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    return View::make('orders');
-});
-
 Route::get('buy', function () {
     return View::make('buy');
 });
 
+Route::get('/', 'OrderController@index');
 Route::get('orders', 'OrderController@all');
 Route::get('materials', 'OrderController@materials');
 Route::get('products', 'OrderController@products');

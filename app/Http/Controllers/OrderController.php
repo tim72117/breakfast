@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use App\Order;
 use App\Material;
 
@@ -16,6 +17,11 @@ class OrderController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    public function index()
+    {
+        return View::make('orders');
     }
 
     /**
