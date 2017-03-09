@@ -1,0 +1,18 @@
+<md-list>
+    <md-list-item md-theme="default" *ngFor="let order of orders" layout="row">
+
+            <h3 flex="15" style="justify-content: center;flex-direction: column;display: flex;text-align: center">{{ order.no }}</h3>
+            <md-list flex>
+                <md-list-item *ngFor="let product of order.products">
+                    <img md-list-avatar src="{{ product.image }}" alt="...">
+                    <div class="md-list-item-text" layout="column">
+                        <h3>{{ product.title }} X {{ product.pivot.amount }}</h3>
+                    </div>
+                </md-list-item>
+            </md-list>
+            <h3 flex="10" style="justify-content: center;flex-direction: column;display: flex;text-align: center">{{ order.wait }} min</h3>
+        <md-card-actions flex="30" layout="row" layout-align="center center">
+            <button md-button ng-click="checkout(order)">$ {{order.total}}</button>
+        </md-card-actions>
+    </md-list-item>
+</md-list>
