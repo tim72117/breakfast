@@ -19,18 +19,17 @@
 <link rel="stylesheet" href="/js/angular_material/1.1.1/angular-material.min.css">
 
 <script>
-var app = angular.module('app', ['ngSanitize', 'ngCookies', 'ngMaterial', 'breakfast']);
+(function() {
+    'use strict';
+    angular.module('app', ['ngSanitize', 'ngCookies', 'ngMaterial', 'breakfast'])
 
-app.config(function ($compileProvider, $mdIconProvider, $mdThemingProvider) {
-    $compileProvider.debugInfoEnabled(true);
-    $mdIconProvider.defaultIconSet('/js/angular_material/core-icons.svg', 24);
-})
-
-.controller('ordersController', function($scope, $http, $timeout) {
-
-
-
-});
+        .config(function ($compileProvider, $mdIconProvider, $mdThemingProvider) {
+            $compileProvider.debugInfoEnabled(true);
+            $mdIconProvider.defaultIconSet('/js/angular_material/core-icons.svg', 24);
+        }).controller('mainController', function($scope) {
+            $scope.isOpen = true;
+        });
+})();
 </script>
 <style>
 md-grid-tile-footer figcaption {
@@ -41,16 +40,27 @@ md-grid-tile-footer figcaption h1 {
 }
 </style>
 </head>
-<body ng-controller="ordersController" layout="column">
+<body layout="column" ng-controller="mainController">
+
+<md-toolbar class="md-hue-2">
+      <div class="md-toolbar-tools">
+      </div>
+</md-toolbar>
+
+<div layout="row" flex>
+    <md-sidenav
+        class="md-sidenav-left"
+        md-component-id="left"
+        md-is-locked-open="isOpen"
+        md-whiteframe="4">
+        <md-list flex>
+            <md-list-item ng-click="null">訂單</md-list-item>
+            <md-list-item ng-click="null">菜單</md-list-item>
+        </md-list>
+    </md-sidenav>
     <md-content flex>
-        <md-tabs md-dynamic-height md-border-bottom md-selected="area">
-            <md-tab label="訂單">
-                <orders ng-if="area==0"></orders>
-            </md-tab>
-            <md-tab label="調理區">
-                <materials ng-if="area==1"></materials>
-            </md-tab>
-        </md-tabs>
+        @yield('content')
     </md-content>
+</div>
 </body>
 </html>
