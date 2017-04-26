@@ -1,6 +1,8 @@
-// const elixir = require('laravel-elixir');
+const elixir = require('laravel-elixir');
+const gulpLivereload = require('gulp-livereload');
 
-// require('laravel-elixir-vue-2');
+require('laravel-elixir-vue-2');
+require('laravel-elixir-livereload');
 
 /*
  |--------------------------------------------------------------------------
@@ -13,23 +15,25 @@
  |
  */
 
-// elixir(mix => {
-//     mix.sass('app.scss')
-//        .webpack('app.js');
-// });
-
 const gulp = require('gulp');
 const babel = require('gulp-babel');
+const util = require("gulp-util");
 
-gulp.task('default', function() {
 
-    gulp.src('resources/assets/js/breakfast/**/*.js')
-        .pipe(gulp.dest('public/js/dist'));
-
-    gulp.watch('resources/assets/js/breakfast/**/*.js')
-        .on('change', function() {
-            gulp.src('resources/assets/js/breakfast/**/*.js')
-                .pipe(gulp.dest('public/js/dist'));
-        });
-
+elixir(mix => {
+    mix.webpack('app.js').webpack('order.js').livereload();
 });
+
+
+// gulp.task('default', function() {
+
+//     gulp.src('resources/assets/js/breakfast/**/*.js')
+//         .pipe(gulp.dest('public/js/dist'));
+
+//     gulp.watch('resources/assets/js/breakfast/**/*.js')
+//         .on('change', function() {
+//             gulp.src('resources/assets/js/breakfast/**/*.js')
+//                 .pipe(gulp.dest('public/js/dist'));
+//         });
+
+// });

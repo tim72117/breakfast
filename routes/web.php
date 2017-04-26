@@ -11,10 +11,6 @@
 |
 */
 
-Route::get('buy', function () {
-    return View::make('buy');
-});
-
 Route::get('/', 'OrderController@index');
 Route::get('orders', 'OrderController@all');
 Route::get('materials', 'OrderController@materials');
@@ -51,6 +47,39 @@ Route::post('order', function (Illuminate\Http\Request $request) {
     $ordered->products()->attach($products);
 
     return ['ordered' => $ordered];
+});
+
+Route::post('cart', function (Illuminate\Http\Request $request) {
+
+    $cartItems = $request->session()->get('items', []);
+
+    array_set($cartItems, $request->input('item')['id'], $request->input('item'));
+
+    $request->session()->put('items', $cartItems);
+
+    return ['items' => $cartItems];
+});
+
+Route::get('cart', function (Illuminate\Http\Request $request) {
+    $products = array_values($request->session()->get('items', []));
+    return ['products' => $products];
+});
+
+Route::delete('cart', function (Illuminate\Http\Request $request) {
+    $request->session()->forget('items');
+    $products = array_values($request->session()->get('items', []));
+    return ['products' => $products];
+});
+
+Route::delete('cart/item/{id}', function ($id, Illuminate\Http\Request $request) {
+
+    $cartItems = $request->session()->get('items', []);
+
+    array_forget($cartItems, $id);
+
+    $request->session()->put('items', $cartItems);
+
+    return ['product' => $cartItems];
 });
 
 Auth::routes();

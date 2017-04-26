@@ -86,9 +86,14 @@ body,
     <v-toolbar>
         <v-toolbar-side-icon></v-toolbar-side-icon>
         <v-toolbar-title>商品</v-toolbar-title>
+        <v-btn icon dark @click.native="removeCart()">
+            <v-icon>remove_shopping_cart</v-icon>
+        </v-btn>
     </v-toolbar>
 
   <main style="-webkit-box-flex: 1;overflow: auto">
+
+
     <v-content>
       <v-container fluid>
 <v-list two-line v-if="e1 === 1">
@@ -96,7 +101,7 @@ body,
     <v-list-item v-bind:key="product.title" @click="openDialog('dialog1', product)">
     <v-list-tile avatar ripple>
         <v-list-tile-avatar>
-        <img v-bind:src="product.avatar" />
+        <img v-bind:src="product.image" />
         </v-list-tile-avatar>
         <v-list-tile-content>
         <v-list-tile-title v-html="product.title" />
@@ -107,7 +112,11 @@ body,
     </v-list-tile>
     </v-list-item>
 </template>
+
 </v-list>
+
+<shop-cart v-if="e1 === 2"></shop-cart>
+
       </v-container>
     </v-content>
   </main>
@@ -125,6 +134,8 @@ body,
   </v-bottom-nav>
 </v-card>
 
+
+
 </v-app>
 
 <md-dialog
@@ -136,6 +147,9 @@ body,
       <md-input-container>
         <label>數量</label>
         <md-input type="number" v-model="prompt.value"></md-input>
+<md-select v-model="prompt.value">
+      <md-option v-for="n in [1, 2, 3]" v-bind:value="n">{{ n }}</md-option>
+    </md-select>
       </md-input-container>
     </form>
   </md-dialog-content>
