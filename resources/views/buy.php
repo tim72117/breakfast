@@ -69,6 +69,12 @@
 // });
 </script>
 <style>
+@media screen and (min-width:600px) {
+    #app {
+        width: 600px;
+    }
+}
+
 html,
 body,
 #app {
@@ -78,9 +84,9 @@ body,
 </style>
 
 </head>
-<body>
+<body class="grey lighten-4" style="display: flex; justify-content: center;">
 
-<div id="app">
+<md-whiteframe id="app">
 
 <v-app style="display: flex;flex: 1;-webkit-flex-direction: column">
     <v-toolbar>
@@ -91,11 +97,9 @@ body,
         </v-btn>
     </v-toolbar>
 
-  <main style="-webkit-box-flex: 1;overflow: auto">
+  <main style="-webkit-box-flex: 1">
+<v-content style="overflow: auto">
 
-
-    <v-content>
-      <v-container fluid>
 <v-list two-line v-if="e1 === 1">
 <template v-for="product in products">
     <v-list-item v-bind:key="product.title" @click="openDialog('dialog1', product)">
@@ -116,9 +120,8 @@ body,
 </v-list>
 
 <shop-cart v-if="e1 === 2"></shop-cart>
+</v-content>
 
-      </v-container>
-    </v-content>
   </main>
 
   <v-card height="56px" id="shopCart">
@@ -200,7 +203,7 @@ body,
     </md-bottom-bar>
 
 </div>-->
-</div>
+</md-whiteframe>
 
 
 
