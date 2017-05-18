@@ -11,4 +11,9 @@ class CustomerController extends Controller
     {
         return View::make('buy');
     }
+
+    public function checkout()
+    {
+
+    }
 }

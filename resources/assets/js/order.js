@@ -126,6 +126,7 @@ const app = new Vue({
             this.$refs[ref].close();
         },
         removeCart: function() {
+            console.log(1);
             shopCart.data.products = [];
             console.log(1);
             axios.delete('/cart')
@@ -135,6 +136,9 @@ const app = new Vue({
             .catch(function (error) {
                 /* 失敗，發生錯誤，然後...*/
             });
+        },
+        checkout: function() {
+            console.log(1);
         }
     }
 });

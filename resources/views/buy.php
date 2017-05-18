@@ -69,12 +69,16 @@
 // });
 </script>
 <style>
-@media screen and (min-width:600px) {
+@media screen and (min-width:800px) {
     #app {
-        width: 600px;
+        width: 800px;
     }
 }
-
+@media screen and (max-width:800px) {
+    #app {
+        flex: 1;
+    }
+}
 html,
 body,
 #app {
@@ -86,15 +90,39 @@ body,
 </head>
 <body class="grey lighten-4" style="display: flex; justify-content: center;">
 
-<md-whiteframe id="app">
+<md-whiteframe id="app" style="display: flex;-webkit-flex-direction: column">
 
-<v-app style="display: flex;flex: 1;-webkit-flex-direction: column">
-    <v-toolbar>
+    <v-toolbar class="red">
         <v-toolbar-side-icon></v-toolbar-side-icon>
         <v-toolbar-title>商品</v-toolbar-title>
-        <v-btn icon dark @click.native="removeCart()">
-            <v-icon>remove_shopping_cart</v-icon>
-        </v-btn>
+        <v-menu bottom left>
+            <v-btn icon="icon" slot="activator" dark>
+                <v-icon>shopping_cart</v-icon>
+            </v-btn>
+            <v-list>
+                <v-list-item @click="checkout()">
+                    <v-list-tile>
+                        <v-list-tile-action>
+                            <v-icon>shopping_cart</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>結帳</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                </v-list-item>
+                <v-divider></v-divider>
+                <v-list-item @click="removeCart()">
+                    <v-list-tile>
+                        <v-list-tile-action>
+                            <v-icon>remove_shopping_cart</v-icon>
+                        </v-list-tile-action>
+                        <v-list-tile-content>
+                            <v-list-tile-title>移除所有項目</v-list-tile-title>
+                        </v-list-tile-content>
+                    </v-list-tile>
+                </v-list-item>
+            </v-list>
+        </v-menu>
     </v-toolbar>
 
   <main style="-webkit-box-flex: 1">
@@ -139,7 +167,7 @@ body,
 
 
 
-</v-app>
+
 
 <md-dialog
     md-close-to="#shopCart"

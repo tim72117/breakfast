@@ -26,6 +26,7 @@ Route::get('products', function () {
 });
 
 Route::get('buy', 'CustomerController@buy');
+Route::post('buy/checkout', 'CustomerController@checkout');
 
 Route::post('order', function (Illuminate\Http\Request $request) {
 
